@@ -10,6 +10,7 @@ import skimage
 from skimage import io
 from scipy.stats import multivariate_normal
 from skimage import filters
+from skimage import measure
 from skimage.color import rgb2gray
 from skimage.measure import label, regionprops, regionprops_table
 from skimage.transform import rotate
@@ -60,17 +61,28 @@ def detect_yellow_ball(image_file, mu, sigma, threshold):
             if probability_of_target_color >= threshold:
                 masked_image[i, j] = 0xFF
 
-    gray = cv2.cvtColor(masked_image, cv2.COLOR_BGR2GRAY)
-    _, threshold = cv2.threshold(gray, 170, 255, cv2.THRESH_BINARY)
-    print(len(threshold))
-    contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    im = filters.gaussian(masked_image, sigma=6)
+    gray = rgb2gray(im)
+    binary = gray > gray.max() * .5
 
-    print(len(contours))
+    labels = measure.label(binary)
 
-    fig, ax = plt.subplots(1, 2)
-    ax[0].imshow(image, cmap='gray')
-    ax[1].imshow(masked_image, cmap='gray')
+    regions = measure.regionprops(labels)
+
+    x = 0
+    y = 0
+    for props in regions:
+        y, x = props.centroid
+        break
+
+    fig, ax = plt.subplots(2, 2)
+    ax[0, 0].imshow(image, cmap='gray')
+    ax[0, 1].imshow(masked_image, cmap='gray')
+    ax[1, 0].imshow(gray, cmap='gray')
+    ax[1, 1].imshow(labels, cmap='gray')
     plt.show()
+
+    return (x, y, binary)
 
 
 def main():
@@ -81,8 +93,8 @@ def main():
     directory = './test'
     for filename in os.scandir(directory):
         if filename.is_file():
-            detect_yellow_ball(filename.path, mu, sigma, threshold)
-            # break
+            x, y, binary = detect_yellow_ball(filename.path, mu, sigma, threshold)
+            print("center of yellow ball is at : ", x, y)
 
 
 if __name__ == "__main__":

@@ -22,27 +22,25 @@ def visualize_file_rgb(file_to_read):
     green = image_g.flatten()
     blue = image_b.flatten()
 
-    ax[1, 0].hist(red[red != 0], density=True, bins='auto', histtype='stepfilled', alpha=0.4, color='r')
+    x = np.linspace(0, 256, 256)
+
+    ax[1, 0].hist(red[red != 0], density=True, bins=x, histtype='stepfilled', alpha=0.4, color='r')
     mur, stdr = norm.fit(red[red != 0])
     print((file_to_read, "red", mur, stdr))
-    xr = np.linspace(0, 256, 256)
-    pr = norm.pdf(xr, mur, stdr)
-    ax[1, 0].plot(xr, pr, 'k', linewidth=1)
+    pr = norm.pdf(x, mur, stdr)
+    ax[1, 0].plot(x, pr, 'k', linewidth=1)
 
-    ax[1, 1].hist(green[green != 0], density=True, bins='auto', histtype='stepfilled', alpha=0.4, color='g')
+    ax[1, 1].hist(green[green != 0], density=True, bins=x, histtype='stepfilled', alpha=0.4, color='g')
     mug, stdg = norm.fit(green[green != 0])
     print((file_to_read, "green", mug, stdg))
-    xg = np.linspace(0, 256, 255)
-    pg = norm.pdf(xg, mug, stdg)
-    ax[1, 1].plot(xg, pg, 'k', linewidth=1)
+    pg = norm.pdf(x, mug, stdg)
+    ax[1, 1].plot(x, pg, 'k', linewidth=1)
 
-    ax[1, 2].hist(blue[blue != 0], density=True, bins='auto', histtype='stepfilled', alpha=0.4, color='b')
+    ax[1, 2].hist(blue[blue != 0], density=True, bins=x, histtype='stepfilled', alpha=0.4, color='b')
     mub, stdb = norm.fit(blue[blue != 0])
     print((file_to_read, "blue", mub, stdb))
-    xb = np.linspace(0, 256, 255)
-    pb = norm.pdf(xb, mub, stdb)
-    ax[1, 2].plot(xb, pb, 'k', linewidth=1)
-
+    pb = norm.pdf(x, mub, stdb)
+    ax[1, 2].plot(x, pb, 'k', linewidth=1)
     plt.show()
 
 
@@ -62,7 +60,7 @@ def visualize_file_hsv(file_to_read):
     ax[0, 1].imshow(image_s, cmap='gray')
     ax[0, 2].imshow(image_v, cmap='gray')
 
-    ax[1, 0].hist(hue[hue != 0], density=True, bins='auto', histtype='stepfilled', color='r' )
+    ax[1, 0].hist(hue[hue != 0], density=True, bins='auto', histtype='stepfilled', color='r')
     mur, stdr = norm.fit(hue[hue != 0])
     print(mur)
     print(stdr)
