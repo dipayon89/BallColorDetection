@@ -77,10 +77,10 @@ def detect_yellow_ball(image_file, mu, sigma, threshold):
     ax[1, 0].imshow(gray, cmap='gray')
     ax[1, 1].set_title('output image')
     ax[1, 1].imshow(labels, cmap='gray')
-    ax[1, 1].plot(x,y,linewidth=2, marker ='+')
+    ax[1, 1].plot(x, y, linewidth=2, marker='+')
     plt.show()
 
-    return (x, y, binary)
+    return x, y, binary
 
 
 def main():
