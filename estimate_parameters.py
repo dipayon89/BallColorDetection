@@ -1,19 +1,12 @@
-import logging
 import os
 
-import cv2
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import skimage
-
-from skimage import io
 from scipy.stats import multivariate_normal
 from skimage import filters
+from skimage import io
 from skimage import measure
 from skimage.color import rgb2gray
-from skimage.measure import label, regionprops, regionprops_table
-from skimage.transform import rotate
 
 
 def compute_parameters():
@@ -76,10 +69,15 @@ def detect_yellow_ball(image_file, mu, sigma, threshold):
         break
 
     fig, ax = plt.subplots(2, 2)
+    ax[0, 0].set_title('input image')
     ax[0, 0].imshow(image, cmap='gray')
+    ax[0, 1].set_title('masked image')
     ax[0, 1].imshow(masked_image, cmap='gray')
+    ax[1, 0].set_title('blurred image')
     ax[1, 0].imshow(gray, cmap='gray')
+    ax[1, 1].set_title('output image')
     ax[1, 1].imshow(labels, cmap='gray')
+    ax[1, 1].plot(x,y,linewidth=2, marker ='+')
     plt.show()
 
     return (x, y, binary)
